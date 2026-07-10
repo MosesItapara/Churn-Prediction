@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank Customer Churn Predictor</title>
+<style>
+  :root {
+    --bg-1: #0f172a;
+    --bg-2: #1e293b;
+    --card: #ffffff;
+    --accent: #4f46e5;
+    --accent-dark: #4338ca;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .wrapper {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .header {
+    text-align: center;
+    color: #f1f5f9;
+    margin-bottom: 24px;
+  }
+
+  .header h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    font-weight: 700;
+  }
+
+  .header p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.95rem;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    padding: 32px;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 20px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field.full {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
+  label .hint {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  input, select {
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: #f8fafc;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    background: #fff;
+  }
+
+  .toggle-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  .toggle-group label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: #f8fafc;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .toggle-group input[type="radio"] {
+    display: none;
+  }
+
+  .toggle-group input[type="radio"]:checked + span {
+    color: var(--accent-dark);
+  }
+
+  .toggle-group label:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(79, 70, 229, 0.08);
+    color: var(--accent-dark);
+  }
+
+  .submit-btn {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .submit-btn:hover {
+    background: var(--accent-dark);
+  }
+
+  .submit-btn:active {
+    transform: scale(0.99);
+  }
+
+  .footer-note {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.78rem;
+    margin-top: 18px;
+  }
+
+  @media (max-width: 560px) {
+    form { grid-template-columns: 1fr; }
+    .card { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>Bank Customer Churn Predictor</h1>
+      <p>Enter customer details to estimate the likelihood of churn</p>
+    </div>
+
+    <div class="card">
+      <form action="/predict" method="POST">
+        <div class="field">
+          <label for="CreditScore">Credit Score <span class="hint">(300–900)</span></label>
+          <input type="number" id="CreditScore" name="CreditScore" min="300" max="900" placeholder="e.g. 650" required>
+        </div>
+
+        <div class="field">
+          <label for="Age">Age</label>
+          <input type="number" id="Age" name="Age" min="18" max="100" placeholder="e.g. 40" required>
+        </div>
+
+        <div class="field">
+          <label for="Geography">Geography</label>
+          <select id="Geography" name="Geography" required>
+            <option value="" disabled selected>Select country</option>
+            <option value="France">France</option>
+            <option value="Germany">Germany</option>
+            <option value="Spain">Spain</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="Gender">Gender</label>
+          <select id="Gender" name="Gender" required>
+            <option value="" disabled selected>Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="Tenure">Tenure <span class="hint">(years with bank)</span></label>
+          <input type="number" id="Tenure" name="Tenure" min="0" max="20" placeholder="e.g. 5" required>
+        </div>
+
+        <div class="field">
+          <label for="NumOfProducts">Number of Products</label>
+          <input type="number" id="NumOfProducts" name="NumOfProducts" min="1" max="4" placeholder="e.g. 2" required>
+        </div>
+
+        <div class="field">
+          <label for="Balance">Account Balance</label>
+          <input type="number" id="Balance" name="Balance" min="0" step="0.01" placeholder="e.g. 75000.00" required>
+        </div>
+
+        <div class="field">
+          <label for="EstimatedSalary">Estimated Salary</label>
+          <input type="number" id="EstimatedSalary" name="EstimatedSalary" min="0" step="0.01" placeholder="e.g. 60000.00" required>
+        </div>
+
+        <div class="field full">
+          <label>Has Credit Card?</label>
+          <div class="toggle-group">
+            <label><input type="radio" name="HasCrCard" value="1" required><span>Yes</span></label>
+            <label><input type="radio" name="HasCrCard" value="0"><span>No</span></label>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>Is Active Member?</label>
+          <div class="toggle-group">
+            <label><input type="radio" name="IsActiveMember" value="1" required><span>Yes</span></label>
+            <label><input type="radio" name="IsActiveMember" value="0"><span>No</span></label>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Predict Churn</button>
+      </form>
+    </div>
+
+    <p class="footer-note">Model served via Flask &middot; scikit-learn preprocessing pipeline</p>
+  </div>
+</body>
+</html>
