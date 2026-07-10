@@ -7,6 +7,8 @@ class PredictPipeline:
     def __init__(self):
         pass
 
+    numerical_columns = ["CreditScore", "Age", "Tenure", "Balance", "NumOfProducts", "EstimatedSalary"]
+
     def predict(self, features):
         try:
             model_path = "artifacts/model.pkl"
@@ -15,10 +17,11 @@ class PredictPipeline:
             model = load_object(file_path=model_path)
             preprocessor = load_object(file_path=preprocessor_path)
 
-            data_scaled = preprocessor.transform(features)
+            data_scaled = preprocessor.transform(features[self.numerical_columns])
             preds = model.predict(data_scaled)
+            probabilities = model.predict_proba(data_scaled)[:, 1] if hasattr(model, "predict_proba") else None
 
-            return preds
+            return preds, probabilities
 
         except Exception as e:
             raise CustomException(e, sys)
@@ -73,6 +76,6 @@ if __name__ == "__main__":
     print(final_df)
 
     predict_pipeline = PredictPipeline()
-    result = predict_pipeline.predict(final_df)
+    result, probability = predict_pipeline.predict(final_df)
 
-    print("Prediction:", result)
+    print("Prediction:", result, "Probability:", probability)

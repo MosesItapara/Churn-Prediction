@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import pandas as pd
 import numpy as np
 import sys
@@ -36,13 +36,15 @@ def predict_datapoint():
         # Get prediction
         pred_df = data.get_data_as_dataframe()
         predict_pipeline = PredictPipeline()
-        prediction = predict_pipeline.predict(pred_df)
+        prediction, probability = predict_pipeline.predict(pred_df)
 
-        # Return prediction result
-        return render_template('result.html', prediction=prediction[0])
+        return jsonify({
+            "churn": bool(int(prediction[0])),
+            "probability": float(probability[0]) if probability is not None else None
+        })
 
     except Exception as e:
-        raise CustomException(e, sys)
+        return jsonify({"error": str(e)}), 400
     
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
