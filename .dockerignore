@@ -1,0 +1,11 @@
+venv/
+.git/
+.gitignore
+.dockerignore
+__pycache__/
+*.pyc
+logs/
+.ipynb_checkpoints/
+notebook/
+artifacts/*.csv
+.claude/

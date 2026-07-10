@@ -1,5 +1,5 @@
 venv/
-artifacts/
+artifacts/*.csv
 logs/
 .ipynb_checkpoints/
 __pycache__/
